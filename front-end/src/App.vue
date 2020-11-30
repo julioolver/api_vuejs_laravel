@@ -23,6 +23,8 @@
 <script>
 import NavBar from "@/components/layouts/NavBar"
 import FooterVue from "@/components/layouts/FooterVue"
+import M from 'materialize-css'
+
 
 export default {
   name: "App",
@@ -30,6 +32,10 @@ export default {
     NavBar,
     FooterVue
   },
+  mounted () {
+    M.AutoInit();
+    M.updateTextFields();
+},
 };
 </script>
 

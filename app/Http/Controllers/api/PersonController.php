@@ -22,16 +22,6 @@ class PersonController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -46,9 +36,9 @@ class PersonController extends Controller
                 $person->contact()
                 ->create($dados);
             }
-            return response()->json('success');
+            return response()->json('success', 200);
         } catch (\Throwable $th) {
-            return $th;
+            return response()->json('error', 404);
         }
         
     }
@@ -93,14 +83,14 @@ class PersonController extends Controller
         $dados = $request->all();
 
         try {
-        $person->update($request->all());
-        if ($person) {
-            $person->contact()
-            ->update($dados['contact']);
-        }
-        return response()->json('success', 200);
+            $person->update($request->all());
+            if ($person) {
+                $person->contact()
+                ->update($dados['contact']);
+            }
+            return response()->json('success', 200);
         } catch (\Throwable $th) {
-            return $th;
+            return response()->json('error', 403);
         }
     }
 

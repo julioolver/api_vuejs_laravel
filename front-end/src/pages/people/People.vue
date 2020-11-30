@@ -1,5 +1,6 @@
 <template>
   <div>
+    <loading :active.sync="visible"></loading>
     <div class="row">
       <div class="col s4 m4" v-for="person in data.data" :key="person.id">
         <div class="card">
@@ -8,7 +9,10 @@
               {{person.nome}}</span>
           </div>
           <div class="card-content">
-            <p>{{ person.contact.phone }}<br /></p>
+            <p>CPF: {{ person.cpf }}<br /></p>
+            <p>Telefone: {{ person.contact.phone }}<br /></p>
+            <p>Whatsapp: {{ person.contact.whatsapp }}<br /></p>
+            <p>E-mail: {{ person.contact.email }}<br /></p>
           </div>
           <a class="btn-floating halfway-fab waves-effect waves-light primary left" @click="editPerson(person)"
             ><i class="material-icons">edit</i></a
@@ -30,22 +34,27 @@
 <script>
 import axios from "axios";
 import InfiniteLoading from "vue-infinite-loading";
+import Loading from 'vue-loading-overlay';
+    // Import stylesheet
+import 'vue-loading-overlay/dist/vue-loading.css';
 
 export default {
   name: "People",
   components: {
     InfiniteLoading,
+    Loading
   },
   data() {
     return {
       data: [],
       list: [],
       page: 1,
+      visible: false
     };
   },
   computed: {
     url() {
-      return "http://bravi.local/api/person";
+      return "http://api-laravel-vuejstest-com.umbler.net/api/person";
     }
   },
   created() {
@@ -79,6 +88,8 @@ export default {
        axios
         .delete(this.url + `/${data.id}`)
         .then(response=> {
+          this.fetchData();
+          this.visible = true;
           if(response.status == 200){
             this.$notify({
               group: 'foo',
@@ -88,7 +99,10 @@ export default {
               speed: 1000,
               position: 'top center'
             });
-           this.fetchData();
+            setTimeout(() => {
+              this.$router.go();
+            }, 3000);
+            
           } else {
             this.$notify({
               group: 'foo',
@@ -99,7 +113,7 @@ export default {
               position: 'top center'
             });
           }
-        })
+        });
     },
   }
 };
